@@ -81,7 +81,20 @@ def get_binned_detector_response(ifos, parameters, fs, waveform_arguments, mode_
     exp_timeshift = np.exp(-1j*2*np.pi*fs*dt_total[:, np.newaxis])
     if hL is not None:
         hL = exp_timeshift[:, np.newaxis, :]*hL[np.newaxis, :, :]
+    calib = np.array([
+        ifo.calibration_model.get_calibration_factor(
+            fs,
+            prefix=f"recalib_{ifo.name}_",
+            **parameters
+        )
+        for ifo in ifos
+    ])
 
+    # ensure shape: (ifo, freq, 1) for HOM modes
+    calib = calib[:, np.newaxis, :]
+
+    # apply to detector response C_{l,m}
+    Ctotal = Ctotal * calib    
     return hL, Ctotal 
 
 def lal_f_max(parameters, reference_frequency=50.):
