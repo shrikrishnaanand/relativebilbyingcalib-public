@@ -55,9 +55,9 @@ def get_binned_detector_response(ifos, parameters, fs, waveform_arguments, mode_
 
     parameters['mass_1'], parameters['mass_2'] = bilby.gw.conversion.chirp_mass_and_mass_ratio_to_component_masses(
         parameters['chirp_mass'], parameters['mass_ratio'])
-    
+    print("compute_C_prefactors yet to start")
     Cplus, Ccross, hL = xphm.compute_C_prefactors(parameters, fs, waveform_arguments, np.array(mode_array), fs)
-
+    print("compute_C_prefactors OK")
     Fplus = np.array([ifo.antenna_response(parameters['ra'], parameters['dec'], 
         parameters['geocent_time'], parameters['psi'], 'plus') for ifo in ifos])
     Fcross = np.array([ifo.antenna_response(parameters['ra'], parameters['dec'], 
