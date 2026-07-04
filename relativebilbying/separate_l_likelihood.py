@@ -77,7 +77,7 @@ def get_binned_detector_response(ifos, parameters, fs, waveform_arguments, mode_
     Ctotal = Cplus_projected+Ccross_projected
     num_ifos = len(ifos)
     num_modes = len(mode_array)
-
+    print('Before Calib')
     exp_timeshift = np.exp(-1j*2*np.pi*fs*dt_total[:, np.newaxis])
     if hL is not None:
         hL = exp_timeshift[:, np.newaxis, :]*hL[np.newaxis, :, :]
@@ -94,7 +94,8 @@ def get_binned_detector_response(ifos, parameters, fs, waveform_arguments, mode_
     calib = calib[:, np.newaxis, :]
 
     # apply to detector response C_{l,m}
-    Ctotal = Ctotal * calib    
+    Ctotal = Ctotal * calib
+    print('After Calib')
     return hL, Ctotal 
 
 def lal_f_max(parameters, reference_frequency=50.):
@@ -208,17 +209,17 @@ class RelativeBinningHOM(Likelihood):
             log_l -= noise_weighted_inner_product(
                 ifo.frequency_domain_strain[mask], ifo.frequency_domain_strain[mask],
                 ifo.power_spectral_density_array[mask], self.duration) / 2.
-
+            print('Noise LL')
         return float(np.real(log_l))
 
     def log_likelihood_ratio(self):
        
         fbin, f_bin_ind, h0_fbin, hC0_fbin, A0, A1, B0, B1 = self.binning_info
         p = relby_conversion(self.parameters, self.waveform_arguments)
-
+        print('After relby')
         h, hC = get_binned_detector_response(
             self.interferometers, p, fbin, self.waveform_arguments, mode_array = self.mode_array)
-        
+        print('After binned response')
         if h is not None:
             r = (h/h0_fbin)
             s = (hC/hC0_fbin)
@@ -278,7 +279,7 @@ class RelativeBinningHOM(Likelihood):
                               for l in range(Nmode)]
                              for ll in range(Nmode)]
                             for i in range(ndet)])
-    
+        print('After coeffs') 
         return A0, A1, B0, B1
 
     def setup_bins(self):
