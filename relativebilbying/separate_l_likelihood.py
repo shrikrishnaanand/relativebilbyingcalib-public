@@ -215,6 +215,7 @@ class RelativeBinningHOM(Likelihood):
     def log_likelihood_ratio(self):
        
         fbin, f_bin_ind, h0_fbin, hC0_fbin, A0, A1, B0, B1 = self.binning_info
+        print(self.parameters)
         p = relby_conversion(self.parameters, self.waveform_arguments)
         print('After relby')
         h, hC = get_binned_detector_response(
