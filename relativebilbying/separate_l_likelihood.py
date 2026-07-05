@@ -164,8 +164,9 @@ class RelativeBinningHOM(Likelihood):
         self.h0, self.hC0 = get_binned_detector_response(
             self.interferometers, self.fiducial_model, self.fs,
             self.waveform_arguments, self.mode_array)
-
-        self.test_model = relby_conversion(test_model, self.waveform_arguments)
+        print('Before relby_init')
+        self.test_model = relby_iconversion(test_model, self.waveform_arguments)
+        print('Before binned_init')
         self.t0, self.tC0 = get_binned_detector_response(
             self.interferometers, self.test_model, self.fs,
             self.waveform_arguments, self.mode_array)
@@ -173,7 +174,7 @@ class RelativeBinningHOM(Likelihood):
             [ifo.frequency_domain_strain[self.mask] for ifo in self.interferometers])
         self.psd_array = np.array(
             [ifo.power_spectral_density_array.copy()[self.mask] for ifo in self.interferometers])
-        
+        print('Before grid_init')        
         self.grid_choice = grid_choice
         self.noise_log_l = self.noise_log_likelihood()
         self.binning_info = self.setup_bins()
